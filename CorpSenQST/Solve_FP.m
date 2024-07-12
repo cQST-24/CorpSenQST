@@ -15,15 +15,18 @@ cvx_begin sdp quiet
                 X == hermitian_semidefinite(d);
 
                 % ||X||_tr=tr(sqrt(X^{\dagger}X))=tr(X)
-                
+                            
+                % One can also normalize the sampling operator, 
+                % see the related discussion of remark 1 in Ref. PRL 132,
+                % 240804 (2024). And this might help with the numerical stability 
+                % of the solution.
+
                 minimize(0.5*pow_pos(norm(y-Pauli*vec(X)-v),2) + tau1*trace(X) + tau2*norm(v,1));     
  
                 subject to
                 X  >= 0;             
 cvx_end
 end
-
-
 
 
 
