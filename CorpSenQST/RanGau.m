@@ -3,7 +3,7 @@ n = 5;
 d = 2^n;
 % rank of density matrix
 r0 = 1;
-
+% N0 = [100 1000 10000];
 N0 = [100 150 200];
 
 tic;
@@ -22,7 +22,7 @@ fprintf('Running from m = %d to %d in increments of %d\n',...
 % do experiments, then take average
 
 % repeat experiment 
-ave = 2;
+ave = 120;
 
 % Create an array of structures and allocates memory
 outRan.m = zeros(m_iter,1);
@@ -35,14 +35,19 @@ outRan.MeanMseNoise = zeros(m_iter,1);
  for m = m_begin: m_step: m_finish
     % here we set sparsity rate less or equal 4%
     s = floor(m*0.04);
+    
 % estimator parameter
+% There is a precision tradeoff between the state recovery and
+% the noise recovery, one can try to reduce tau2 to improve 
+% the accuracy of corrupted noise reconstruction
 tau1 = 0.011*m;
-tau2 = 0.16; 
+tau2 = 0.16;
+
 fprintf('Taking measurements...');
 fprintf('%5.1f%%\n', m/m_finish*100 )
 
 % remember to change save road if you run in different device
-pname = 'D:\Project\Numerical Simulation\CSQST_matlab_0221\code_github\';
+pname = 'D:\Project\Numerical Simulation\CSQST_matlab\';
 parfor ii = 1:ave
    [rhoT,noiseT,Pauli,y] = RanGetdataGau(d,n,r,m,s,N);
    [rhoE,noiseE] = Solve_FP(n,r,m,s,Pauli,y,tau1,tau2);
